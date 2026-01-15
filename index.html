@@ -2,47 +2,48 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Video Data Vault | Base64 Tool</title>
+    <title>Stream & Vault Ultimate</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="vault-container">
-        <h1>Video <span class="accent">Data Vault</span></h1>
+    <div class="container">
+        <h1>Video <span class="accent">Master Tool</span></h1>
 
-        <section class="box">
-            <h2>1. Encode & Drag</h2>
-            <p>Convert video file/link to Base64</p>
-            <div class="input-group">
-                <input type="text" id="urlInput" placeholder="Paste URL...">
-                <span class="or">OR</span>
-                <input type="file" id="fileInput" accept="video/*">
+        <section class="panel">
+            <h2>1. Live Proxy Streamer</h2>
+            <div class="input-row">
+                <input type="text" id="streamUrl" placeholder="Paste Restricted Link (MP4/MOV)...">
+                <button onclick="handleStream()">Stream</button>
             </div>
-
-            <div id="previewArea" class="hidden">
-                <div class="card" id="dragCard" draggable="true">
-                    <video id="videoPreview" autoplay muted loop playsinline></video>
-                    <div class="overlay">DRAG ME</div>
+            <div id="streamPreview" class="preview-box hidden">
+                <div class="draggable-card" id="dragStream" draggable="true">
+                    <video id="vStream" autoplay muted loop playsinline></video>
+                    <div class="overlay">LIVE STREAM (DRAG ME)</div>
                 </div>
-                <div class="action-buttons">
-                    <button onclick="downloadAsTxt()">Download as .txt</button>
-                    <button onclick="copyToClipboard()">Copy Base64</button>
-                </div>
+                <p id="streamStatus" class="status-text">Ready</p>
             </div>
         </section>
 
-        <section class="box">
-            <h2>2. Decode & Reconstruct</h2>
-            <p>Upload .txt or paste Base64 code</p>
-            <textarea id="decodeInput" placeholder="Paste Base64 code here..."></textarea>
-            <div class="input-group">
-                <input type="file" id="txtUpload" accept=".txt">
+        <section class="panel">
+            <h2>2. Base64 Encoder / Decoder</h2>
+            <div class="input-row">
+                <input type="file" id="fileEncoder" accept="video/*">
+                <input type="file" id="txtDecoder" accept=".txt">
             </div>
-            <div id="decodeArea" class="hidden">
-                <video id="decodedVideo" controls></video>
+            <textarea id="b64Text" placeholder="Paste Base64 code here to Decode..."></textarea>
+            
+            <div id="vaultPreview" class="preview-box hidden">
+                <div class="draggable-card" id="dragVault" draggable="true">
+                    <video id="vVault" controls playsinline></video>
+                    <div class="overlay">BASE64 DATA (DRAG ME)</div>
+                </div>
+                <div class="btn-group">
+                    <button onclick="downloadTxt()">Download .txt</button>
+                    <button onclick="copyB64()">Copy Code</button>
+                </div>
             </div>
         </section>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
