@@ -3,116 +3,72 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pikco — Compressed Multi-QR Streamer</title>
-
-  <!-- Libraries -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
-
+  <title>Video ⇄ Base64 Encoder / Decoder</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div class="container">
-  <h1>Compressed Multi-QR Streamer — Pikco Lab</h1>
-  <p class="hint">
-    Upload a video → compress & chunk → generate QRs.  
-    Decode by scanning or pasting.
-  </p>
+  <div class="container">
+    <h1>Video ⇄ Base64 Tool</h1>
 
-  <section class="card">
-    <h2>Player & Fullscreen</h2>
-    <div class="video-wrap">
-      <video id="videoPreview" controls playsinline></video>
-      <button id="fsBtn" class="btn small">⛶ Fullscreen</button>
-    </div>
-
-    <div class="row">
-      <input id="urlInput" placeholder="Optional direct mp4 URL (CORS may block)" />
-      <button id="loadUrlBtn" class="btn">Load URL</button>
-    </div>
-
-    <div class="row">
-      <input type="file" id="videoFile" accept="video/*" />
-      <button id="playFileBtn" class="btn">Play File</button>
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>Encode → Compress → Chunk → QR</h2>
-
-    <div class="row">
-      <label>Chunk size (chars):</label>
-      <input id="chunkSize" type="number" min="512" max="8000" value="1800" />
-      <label>Animated FPS:</label>
-      <input id="animFps" type="number" min="1" max="10" value="1" />
-    </div>
-
-    <div class="row">
-      <button id="encodeBtn" class="btn primary">Encode Selected File</button>
-      <button id="createQRs" class="btn">Chunk & Create QR Deck</button>
-    </div>
-
-    <textarea id="base64Output" placeholder="Compressed Base64 output will appear here"></textarea>
-    <div id="encodeStatus" class="muted small">Waiting for encoding…</div>
-
-    <div class="row actions">
-      <button id="copyB64" class="btn">Copy Compressed Base64</button>
-      <button id="downloadTxt" class="btn">Download .txt (chunks)</button>
-    </div>
-
-    <div id="qrControls" class="hidden">
-      <div class="qr-stage">
-        <div id="qrCanvas"></div>
-        <div class="qr-meta">
-          <span id="qrIndex">0 / 0</span>
-          <div>
-            <button id="prevQr" class="btn small">Prev</button>
-            <button id="nextQr" class="btn small">Next</button>
-            <button id="autoPlayQr" class="btn small">Auto Play</button>
-            <button id="stopAuto" class="btn small">Stop</button>
-            <button id="animatedStream" class="btn small">Animated</button>
-            <button id="stopAnimated" class="btn small">Stop Stream</button>
-          </div>
-        </div>
+    <!-- Player & Fullscreen -->
+    <section class="card">
+      <h2>Player & Fullscreen</h2>
+      <div class="video-wrap">
+        <video id="videoPreview" controls playsinline></video>
+        <button id="fsBtn" class="btn small">⛶ Fullscreen</button>
       </div>
-    </div>
-
-    <div class="muted small">Estimated QR count: <span id="estCount">0</span></div>
-  </section>
-
-  <section class="card">
-    <h2>Decoder</h2>
-
-    <textarea id="decodeInput" placeholder="Paste compressed base64 OR one chunk (VQR|...)"></textarea>
-
-    <div class="row">
-      <input type="file" id="txtUpload" accept=".txt,text/plain" />
-      <button id="decodeBtn" class="btn primary">Decode Paste / File</button>
-      <button id="playDecoded" class="btn">Play Decoded</button>
-    </div>
-
-    <div class="scanner-area">
-      <h3>QR Scanner</h3>
-      <div id="qrScanner"></div>
 
       <div class="row">
-        <button id="startScan" class="btn">Start Scanner</button>
-        <button id="stopScan" class="btn">Stop Scanner</button>
-        <button id="manualAdd" class="btn">Manual Add Chunk</button>
+        <input id="urlInput" placeholder="Paste direct mp4 URL (optional)" />
+        <button id="loadUrlBtn" class="btn">Load URL</button>
       </div>
-      <div id="scanProgress" class="small muted">No chunks scanned</div>
-    </div>
 
-    <div class="row">
-      <button id="assembleBtn" class="btn primary">Assemble & Play</button>
-      <button id="downloadVideoBtn" class="btn">Download Video</button>
-    </div>
+      <div class="row">
+        <input type="file" id="videoFile" accept="video/*" />
+        <button id="playFileBtn" class="btn">Play File</button>
+      </div>
+    </section>
 
-    <video id="decodedPlayer" controls class="hidden"></video>
-  </section>
-</div>
+    <!-- Encode to Base64 -->
+    <section class="card">
+      <h2>Encode → Base64</h2>
 
-<script src="script.js"></script>
+      <div class="row">
+        <button id="encodeBtn" class="btn primary">Encode Active Video or File</button>
+      </div>
+
+      <div class="row">
+        <textarea id="base64Output" placeholder="Base64 output will appear here"></textarea>
+      </div>
+
+      <div class="row actions">
+        <button id="copyB64" class="btn">Copy Base64</button>
+        <button id="downloadTxt" class="btn">Download .txt</button>
+      </div>
+    </section>
+
+    <!-- Decoder -->
+    <section class="card">
+      <h2>Decode Base64 → Video</h2>
+
+      <div class="row">
+        <textarea id="decodeInput" placeholder="Paste Base64 string here"></textarea>
+      </div>
+
+      <div class="row">
+        <input type="file" id="txtUpload" accept=".txt,text/plain" />
+        <button id="decodeBtn" class="btn primary">Decode & Play</button>
+      </div>
+
+      <div class="row">
+        <button id="downloadVideoBtn" class="btn">Download Decoded Video</button>
+      </div>
+
+      <video id="decodedPlayer" controls class="hidden"></video>
+    </section>
+
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
