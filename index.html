@@ -1,33 +1,112 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamDragger Pro</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Stream → Base64 → Multi-QR — Pikco Lab</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- QR generation lib (frontend) -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <!-- QR scanner UI helper (html5-qrcode) -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Video Stream Dragger</h1>
-        <p class="desc">Paste a link to generate a draggable, proxied video reference.</p>
-        
-        <div class="input-box">
-            <input type="text" id="urlInput" placeholder="Paste .mp4, .mov, or HLS link...">
-            <div id="statusIndicator" class="status-dot" title="Checking Backend Status..."></div>
-        </div>
+  <div class="container">
+    <h1>Stream ⇄ Base64 ⇄ Multi-QR</h1>
+    <p class="hint">Upload a short video or use a URL → encode to Base64 → chunk → generate QR deck → scan to decode.</p>
 
-        <div id="previewArea" class="hidden">
-            <div class="card" id="dragCard" draggable="true">
-                <div class="video-container">
-                    <video id="videoPreview" autoplay muted loop playsinline></video>
-                    <div class="drag-overlay">DRAG ME</div>
-                </div>
-                <div class="card-info">
-                    <span id="videoName">Ready to Stream</span>
-                </div>
+    <section class="card">
+      <h2>Player & Fullscreen</h2>
+      <div class="video-wrap">
+        <video id="videoPreview" controls playsinline></video>
+        <button id="fsBtn" class="btn small">⛶ Fullscreen</button>
+      </div>
+
+      <div class="row">
+        <input id="urlInput" placeholder="Paste direct mp4/m3u8 URL (optional)" />
+        <button id="loadUrlBtn" class="btn">Load URL</button>
+      </div>
+
+      <div class="row">
+        <input type="file" id="videoFile" accept="video/*" />
+        <button id="playFileBtn" class="btn">Play File</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Encode → Base64 → Chunk → QR</h2>
+
+      <div class="row">
+        <label>Chunk size (chars):</label>
+        <input id="chunkSize" type="number" min="512" max="8000" value="2000" />
+      </div>
+
+      <div class="row">
+        <button id="encodeBtn" class="btn primary">Encode Selected File (or Active URL)</button>
+        <button id="generateQrBtn" class="btn">Generate QR Deck</button>
+      </div>
+
+      <div class="row">
+        <textarea id="base64Output" placeholder="Base64 output (auto-filled after encode)"></textarea>
+      </div>
+
+      <div class="row actions">
+        <button id="copyB64" class="btn">Copy Base64</button>
+        <button id="downloadTxt" class="btn">Download .txt</button>
+        <button id="createQRs" class="btn">Create QRs (chunked)</button>
+      </div>
+
+      <div id="qrControls" class="hidden">
+        <div class="qr-stage">
+          <div id="qrCanvas"></div>
+          <div class="qr-meta">
+            <span id="qrIndex">0 / 0</span>
+            <div>
+              <button id="prevQr" class="btn small">Prev</button>
+              <button id="nextQr" class="btn small">Next</button>
+              <button id="autoPlayQr" class="btn small">Auto Play</button>
+              <button id="stopAuto" class="btn small">Stop</button>
             </div>
+          </div>
         </div>
-    </div>
-    <script src="script.js"></script>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Decoder (Paste / Upload / Scan)</h2>
+
+      <div class="row">
+        <textarea id="decodeInput" placeholder="Paste full Base64 (or first chunk header)"></textarea>
+      </div>
+
+      <div class="row">
+        <input type="file" id="txtUpload" accept=".txt,text/plain" />
+        <button id="decodeBtn" class="btn primary">Decode Paste / File</button>
+        <button id="playDecoded" class="btn">Play Decoded In Player</button>
+      </div>
+
+      <div class="scanner-area">
+        <h3>QR Scanner (camera)</h3>
+        <div id="qrScanner" style="width:100%;"></div>
+        <div class="row">
+          <button id="startScan" class="btn">Start Scanner</button>
+          <button id="stopScan" class="btn">Stop Scanner</button>
+          <button id="manualAdd" class="btn">Manual Add (paste a chunk)</button>
+        </div>
+        <div id="scanProgress" class="small muted">No chunks scanned yet</div>
+      </div>
+
+      <div class="row">
+        <button id="assembleBtn" class="btn primary">Assemble Scanned Chunks → Play</button>
+        <button id="downloadVideoBtn" class="btn">Download Reassembled Video</button>
+      </div>
+
+      <video id="decodedPlayer" controls class="hidden"></video>
+    </section>
+
+    <div class="footer muted">Tip: keep clips short for QR transfer. Chunk size ~1500–3000 works well on phones.</div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
