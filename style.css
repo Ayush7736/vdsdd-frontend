@@ -1,22 +1,16 @@
-:root { --bg: #0f172a; --panel: #1e293b; --accent: #38bdf8; --success: #4ade80; }
-
-body { background: var(--bg); color: white; font-family: sans-serif; padding: 20px; }
-.vault-container { max-width: 800px; margin: 0 auto; }
+:root { --bg: #0b0e14; --panel: #161b22; --accent: #58a6ff; --text: #c9d1d9; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; padding: 20px; }
+.container { max-width: 700px; margin: 0 auto; }
 .accent { color: var(--accent); }
-
-.box { background: var(--panel); padding: 25px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #334155; }
-h2 { margin-top: 0; color: var(--accent); }
-
-.input-group { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-input[type="text"], textarea { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; }
-textarea { height: 80px; width: 100%; resize: vertical; margin-bottom: 10px; }
-
-.card { width: 300px; margin: 20px auto; border-radius: 12px; overflow: hidden; cursor: grab; background: #000; position: relative; }
+.panel { background: var(--panel); border: 1px solid #30363d; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+.input-row { display: flex; gap: 10px; margin-bottom: 15px; }
+input, textarea { flex: 1; background: #010409; border: 1px solid #30363d; color: white; padding: 10px; border-radius: 6px; }
+textarea { height: 60px; width: 100%; margin-top: 10px; font-size: 10px; }
+.preview-box { margin-top: 15px; text-align: center; }
+.draggable-card { width: 320px; margin: 0 auto; background: #000; border-radius: 8px; overflow: hidden; cursor: grab; position: relative; border: 2px solid #30363d; }
+.draggable-card:active { cursor: grabbing; border-color: var(--accent); }
 video { width: 100%; display: block; }
-.overlay { position: absolute; bottom: 0; background: rgba(56, 189, 248, 0.8); width: 100%; padding: 5px; font-weight: bold; font-size: 12px; color: #000; text-align: center; }
-
-.action-buttons { display: flex; gap: 10px; justify-content: center; }
-button { background: var(--accent); border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-button:hover { opacity: 0.9; }
-
+.overlay { background: var(--accent); color: #000; font-size: 11px; font-weight: bold; padding: 4px; }
+.btn-group { margin-top: 10px; display: flex; gap: 10px; justify-content: center; }
 .hidden { display: none; }
+.status-text { font-size: 12px; color: #8b949e; margin-top: 8px; }
