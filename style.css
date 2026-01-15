@@ -1,0 +1,41 @@
+:root {
+    --bg: #0f172a; --card: #1e293b; --accent: #38bdf8;
+}
+
+body {
+    background-color: var(--bg); color: white;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    display: flex; justify-content: center; padding: 40px;
+}
+
+.container { width: 100%; max-width: 500px; text-align: center; }
+
+.input-box { position: relative; display: flex; align-items: center; }
+
+input {
+    width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #334155;
+    background: var(--card); color: white; font-size: 1rem;
+}
+
+.status-dot {
+    position: absolute; right: 15px; width: 12px; height: 12px;
+    border-radius: 50%; background: #64748b; /* Gray until awake */
+}
+
+.status-dot.online { background: #4ade80; box-shadow: 0 0 8px #4ade80; }
+
+.card {
+    margin-top: 30px; background: var(--card); border-radius: 15px;
+    overflow: hidden; cursor: grab; border: 2px solid transparent; transition: 0.2s;
+}
+
+.card:active { cursor: grabbing; border-color: var(--accent); scale: 0.98; }
+
+video { width: 100%; display: block; pointer-events: none; }
+
+.drag-overlay {
+    background: rgba(56, 189, 248, 0.2); padding: 10px;
+    font-weight: bold; color: var(--accent); font-size: 0.8rem;
+}
+
+.hidden { display: none; }
