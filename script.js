@@ -1,80 +1,76 @@
-const PROXY_BASE = "https://vdsdd.onrender.com/?url=";
-let currentBase64 = "";
+// YOUR RENDER URL
+const PROXY_URL = "https://vdsdd.onrender.com/?url=";
 
-// --- ENCODER LOGIC ---
+// --- 1. STREAMING LOGIC ---
+function handleStream() {
+    const rawUrl = document.getElementById('streamUrl').value.trim();
+    if (!rawUrl) return;
 
-// Handle URL Input (Existing Proxy Tool Logic)
-document.getElementById('urlInput').addEventListener('input', async (e) => {
-    const url = e.target.value.trim();
-    if (url.startsWith('http')) {
-        const proxiedUrl = PROXY_BASE + encodeURIComponent(url);
-        updatePreview(proxiedUrl);
-        // Note: For URLs, we don't automatically convert to Base64 to save RAM
-        // unless you use a fetch/blob strategy.
-    }
-});
+    const finalUrl = PROXY_URL + encodeURIComponent(rawUrl);
+    const v = document.getElementById('vStream');
+    const status = document.getElementById('streamStatus');
+    
+    document.getElementById('streamPreview').classList.remove('hidden');
+    v.src = finalUrl;
+    status.innerText = "Connecting to Proxy...";
 
-// Handle File Input (Convert to Base64)
-document.getElementById('fileInput').addEventListener('change', function() {
+    v.oncanplay = () => status.innerText = "Streaming via Proxy (Chunked)";
+    v.onerror = () => status.innerHTML = "<span style='color:red'>Proxy Error: Backend might be sleeping or URL is invalid.</span>";
+
+    document.getElementById('dragStream').ondragstart = (e) => {
+        e.dataTransfer.setData('text/uri-list', finalUrl);
+        e.dataTransfer.setData('text/plain', finalUrl);
+    };
+}
+
+// --- 2. BASE64 VAULT LOGIC ---
+const fileEncoder = document.getElementById('fileEncoder');
+const b64Text = document.getElementById('b64Text');
+const vVault = document.getElementById('vVault');
+
+// Encode Local File
+fileEncoder.onchange = function() {
     const file = this.files[0];
     const reader = new FileReader();
     reader.onload = (e) => {
-        currentBase64 = e.target.result;
-        updatePreview(currentBase64);
+        const data = e.target.result;
+        b64Text.value = data;
+        loadVaultVideo(data);
     };
     reader.readAsDataURL(file);
-});
+};
 
-function updatePreview(src) {
-    const preview = document.getElementById('videoPreview');
-    preview.src = src;
-    document.getElementById('previewArea').classList.remove('hidden');
-    
-    // Make Draggable
-    document.getElementById('dragCard').ondragstart = (e) => {
-        e.dataTransfer.setData('text/plain', src);
-    };
-}
+// Decode Textarea or .txt File
+b64Text.oninput = () => loadVaultVideo(b64Text.value.trim());
 
-// Download as .txt
-function downloadAsTxt() {
-    if (!currentBase64) return alert("Convert a file first!");
-    const blob = new Blob([currentBase64], { type: 'text/plain' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = "video-data.txt";
-    link.click();
-}
-
-function copyToClipboard() {
-    navigator.clipboard.writeText(currentBase64);
-    alert("Base64 Copied!");
-}
-
-// --- DECODER LOGIC ---
-
-const decodeInput = document.getElementById('decodeInput');
-const decodedVideo = document.getElementById('decodedVideo');
-const decodeArea = document.getElementById('decodeArea');
-
-// Handle Textarea Paste
-decodeInput.addEventListener('input', (e) => {
-    const code = e.target.value.trim();
-    if (code.startsWith('data:video')) {
-        decodedVideo.src = code;
-        decodeArea.classList.remove('hidden');
-    }
-});
-
-// Handle .txt Upload
-document.getElementById('txtUpload').addEventListener('change', function() {
-    const file = this.files[0];
+document.getElementById('txtDecoder').onchange = function() {
     const reader = new FileReader();
     reader.onload = (e) => {
-        const content = e.target.result.trim();
-        decodeInput.value = content;
-        decodedVideo.src = content;
-        decodeArea.classList.remove('hidden');
+        b64Text.value = e.target.result;
+        loadVaultVideo(e.target.result);
     };
-    reader.readAsText(file);
-});
+    reader.readAsText(this.files[0]);
+};
+
+function loadVaultVideo(data) {
+    if (!data.startsWith('data:video')) return;
+    vVault.src = data;
+    document.getElementById('vaultPreview').classList.remove('hidden');
+    
+    document.getElementById('dragVault').ondragstart = (e) => {
+        e.dataTransfer.setData('text/plain', data);
+    };
+}
+
+function downloadTxt() {
+    const blob = new Blob([b64Text.value], {type: 'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = "video-vault.txt";
+    a.click();
+}
+
+function copyB64() {
+    navigator.clipboard.writeText(b64Text.value);
+    alert("Base64 Copied!");
+}
