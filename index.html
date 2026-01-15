@@ -2,47 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Stream & Vault Ultimate</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamDragger Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Video <span class="accent">Master Tool</span></h1>
+        <h1>Video Stream Dragger</h1>
+        <p class="desc">Paste a link to generate a draggable, proxied video reference.</p>
+        
+        <div class="input-box">
+            <input type="text" id="urlInput" placeholder="Paste .mp4, .mov, or HLS link...">
+            <div id="statusIndicator" class="status-dot" title="Checking Backend Status..."></div>
+        </div>
 
-        <section class="panel">
-            <h2>1. Live Proxy Streamer</h2>
-            <div class="input-row">
-                <input type="text" id="streamUrl" placeholder="Paste Restricted Link (MP4/MOV)...">
-                <button onclick="handleStream()">Stream</button>
-            </div>
-            <div id="streamPreview" class="preview-box hidden">
-                <div class="draggable-card" id="dragStream" draggable="true">
-                    <video id="vStream" autoplay muted loop playsinline></video>
-                    <div class="overlay">LIVE STREAM (DRAG ME)</div>
+        <div id="previewArea" class="hidden">
+            <div class="card" id="dragCard" draggable="true">
+                <div class="video-container">
+                    <video id="videoPreview" autoplay muted loop playsinline></video>
+                    <div class="drag-overlay">DRAG ME</div>
                 </div>
-                <p id="streamStatus" class="status-text">Ready</p>
-            </div>
-        </section>
-
-        <section class="panel">
-            <h2>2. Base64 Encoder / Decoder</h2>
-            <div class="input-row">
-                <input type="file" id="fileEncoder" accept="video/*">
-                <input type="file" id="txtDecoder" accept=".txt">
-            </div>
-            <textarea id="b64Text" placeholder="Paste Base64 code here to Decode..."></textarea>
-            
-            <div id="vaultPreview" class="preview-box hidden">
-                <div class="draggable-card" id="dragVault" draggable="true">
-                    <video id="vVault" controls playsinline></video>
-                    <div class="overlay">BASE64 DATA (DRAG ME)</div>
-                </div>
-                <div class="btn-group">
-                    <button onclick="downloadTxt()">Download .txt</button>
-                    <button onclick="copyB64()">Copy Code</button>
+                <div class="card-info">
+                    <span id="videoName">Ready to Stream</span>
                 </div>
             </div>
-        </section>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
