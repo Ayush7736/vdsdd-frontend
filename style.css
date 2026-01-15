@@ -1,16 +1,41 @@
-:root { --bg: #0b0e14; --panel: #161b22; --accent: #58a6ff; --text: #c9d1d9; }
-body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; padding: 20px; }
-.container { max-width: 700px; margin: 0 auto; }
-.accent { color: var(--accent); }
-.panel { background: var(--panel); border: 1px solid #30363d; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
-.input-row { display: flex; gap: 10px; margin-bottom: 15px; }
-input, textarea { flex: 1; background: #010409; border: 1px solid #30363d; color: white; padding: 10px; border-radius: 6px; }
-textarea { height: 60px; width: 100%; margin-top: 10px; font-size: 10px; }
-.preview-box { margin-top: 15px; text-align: center; }
-.draggable-card { width: 320px; margin: 0 auto; background: #000; border-radius: 8px; overflow: hidden; cursor: grab; position: relative; border: 2px solid #30363d; }
-.draggable-card:active { cursor: grabbing; border-color: var(--accent); }
-video { width: 100%; display: block; }
-.overlay { background: var(--accent); color: #000; font-size: 11px; font-weight: bold; padding: 4px; }
-.btn-group { margin-top: 10px; display: flex; gap: 10px; justify-content: center; }
+:root {
+    --bg: #0f172a; --card: #1e293b; --accent: #38bdf8;
+}
+
+body {
+    background-color: var(--bg); color: white;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    display: flex; justify-content: center; padding: 40px;
+}
+
+.container { width: 100%; max-width: 500px; text-align: center; }
+
+.input-box { position: relative; display: flex; align-items: center; }
+
+input {
+    width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #334155;
+    background: var(--card); color: white; font-size: 1rem;
+}
+
+.status-dot {
+    position: absolute; right: 15px; width: 12px; height: 12px;
+    border-radius: 50%; background: #64748b; /* Gray until awake */
+}
+
+.status-dot.online { background: #4ade80; box-shadow: 0 0 8px #4ade80; }
+
+.card {
+    margin-top: 30px; background: var(--card); border-radius: 15px;
+    overflow: hidden; cursor: grab; border: 2px solid transparent; transition: 0.2s;
+}
+
+.card:active { cursor: grabbing; border-color: var(--accent); scale: 0.98; }
+
+video { width: 100%; display: block; pointer-events: none; }
+
+.drag-overlay {
+    background: rgba(56, 189, 248, 0.2); padding: 10px;
+    font-weight: bold; color: var(--accent); font-size: 0.8rem;
+}
+
 .hidden { display: none; }
-.status-text { font-size: 12px; color: #8b949e; margin-top: 8px; }
